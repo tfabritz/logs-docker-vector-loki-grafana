@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: grafana
+    environment:
+      # - GF_LOG_LEVEL=warn
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./grafana-provisioning/:/etc/grafana/provisioning/
+    ports:
+      - "3000:3000"
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5123"
+        tag: "grafana"
+      
+  loki:
+    container_name: loki
+    image: grafana/loki:2.9.1
+    command: -config.file=/conf/loki-config.yaml
+    volumes:
+      - ./loki/data:/data
+      - ./loki/conf:/conf
+    ports:
+      - "3100:3100"
+
+  vector:
+    image: timberio/vector:0.33.0-debian
+    container_name: vector
+    volumes:
+      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+    ports:
+      - "127.0.0.1:5123:5123/udp"
+
+
