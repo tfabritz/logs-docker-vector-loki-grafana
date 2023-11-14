@@ -1,0 +1,32 @@
+api:
+  enabled: true
+
+sources:
+  vectorlogs:
+    type: internal_logs
+    
+  dockersyslog:
+    type: syslog
+    address: '0.0.0.0:5123'
+    mode: udp
+
+sinks:
+  loki_vectorlogs:
+    type: loki
+    inputs:
+      - vectorlogs
+    encoding:
+      codec: json
+    endpoint: 'http://loki:3100'
+    labels:
+      logsource: vector
+
+  loki_dockersyslog:
+    type: loki
+    inputs:
+      - dockersyslog
+    encoding:
+      codec: json
+    endpoint: 'http://loki:3100'
+    labels:
+      logsource: docker

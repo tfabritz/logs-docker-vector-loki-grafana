@@ -32,7 +32,7 @@ services:
     image: timberio/vector:0.33.0-debian
     container_name: vector
     volumes:
-      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+      - ./vector/vector.yaml:/etc/vector/vector.yaml:ro
     ports:
       - "127.0.0.1:5123:5123/udp"
 
